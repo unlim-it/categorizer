@@ -1,0 +1,14 @@
+﻿@using System.Text.RegularExpressions
+@model Categorizer.Services.Contracts.DtoFragment
+@{
+    var pattern = string.Join("|", Model.Category.Keywords.Select(it => Regex.Escape(it.Value)));
+
+    var html = Regex.Replace(Model.Text, pattern,
+        it => string.Format("<span class='keyword' >{0}</span>", it), RegexOptions.IgnoreCase);
+}
+
+
+<div>
+    <div class="fragment">@Html.Raw(html)</div>
+    <p class="fragment-time">Created At:&nbsp;@Model.CreateAt.ToShortDateString()</p>
+</div>

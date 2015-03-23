@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Categorizer.Services.Contracts.DtoCategory>
+@{
+    ViewBag.Title = "Categories";
+}
+
+<h2>Categories</h2>
+<h4>Here you can manage your categories and keywords</h4>
+<hr />
+
+<div ng-app="CategorizerApp">
+    <div ng-controller="CategoriesCtrl" ng-init="init()">
+        
+        <button type="button" class="btn btn-primary" ng-click="createCategory()">Create New</button>
+        <br /><br />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Keywords</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="category in categories">
+                    <td>{{ category.Name }}</td>
+                    <td>
+                        {{ getKeywordsString(category.Keywords) }}
+                    </td>
+                    <td style="width: 150px">
+                        <button ng-click="editCategory(category)" class="btn btn-primary btn-sm">Edit</button>
+                        <button ng-click="deleteCategory(category)" class="btn btn-danger btn-sm">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="modal fade" id="editCategory" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">{{ currentCategory.NameLabel }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" ng-show="errorMessage">
+                            <b>Error:</b>&nbsp;{{ errorMessage }}
+                        </div>
+                        <form>
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" ng-model="currentCategory.Name" class="form-control" placeholder="Category Name">
+                            </div>
+                            <div class="form-group">
+                                <label>Keywords</label>
+                                <taglist tag-data="currentCategory.Keywords"><input /></taglist>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" ng-click="submit()" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="deleteCategory" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Category: {{ currentCategory.Name }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" ng-show="errorMessage">
+                            <b>Error:</b>&nbsp;{{ errorMessage }}
+                        </div>
+                        <p>Are you sure you want to delete this category?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" ng-click="deleteSubmit()" class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/angular-taglist-directive.js"></script>
+    <script src="~/Scripts/app/categories-controller.js"></script>
+}

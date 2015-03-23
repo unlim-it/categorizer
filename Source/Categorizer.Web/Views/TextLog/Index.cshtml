@@ -1,0 +1,18 @@
+﻿@model IEnumerable<Categorizer.Services.Contracts.DtoFragment>
+@{
+    ViewBag.Title = "Text Log";
+}
+
+<h2>Text Log</h2>
+<h4>History of uploaded text grouped by category</h4>
+<hr />
+
+@foreach (var fragments in Model.GroupBy(it => it.Category.Name))
+{
+    <h4><b>@fragments.Key</b></h4>
+
+    foreach (var fragment in fragments)
+    {
+        @Html.Partial("~/Views/Shared/_Fragment.cshtml", fragment)
+    }
+}

@@ -1,0 +1,64 @@
+﻿@using Categorizer.Services.Contracts
+@model Categorizer.Web.Models.UploadTextModel
+@{
+    ViewBag.Title = "Dashboard";
+
+    var fragments = TempData["Fragments"] as IEnumerable<DtoFragment>;
+    var hasFragments = fragments != null;
+}
+
+<h2>Dashboard</h2>
+<h4>Please use form below to upload new text to the server</h4>
+<hr />
+
+<div>
+    <div class="row">
+        <div class="col-md-6">
+            @if (ViewBag.IsUploadSuccess != null)
+            {
+                if (ViewBag.IsUploadSuccess)
+                {
+                    <div class="alert alert-success" role="alert">
+                        <b>Success: </b>@ViewBag.Message
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <b>Error: </b>@ViewBag.Message
+                    </div>
+                }
+            }
+            <form method="POST" action="" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Text)
+                    @Html.TextAreaFor(m => m.Text, new { @class = "form-control", rows = "10" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FileInput1)
+                    @Html.TextBoxFor(m => m.FileInput1, new { type = "file" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FileInput2)
+                    @Html.TextBoxFor(m => m.FileInput2, new { type = "file" })
+                </div>
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <p><b>Latest uploaded text:</b></p>
+            @if (hasFragments)
+            {
+                foreach (var fragment in fragments)
+                {
+                    <p class="category">@fragment.Category.Name</p>
+                    @Html.Partial("~/Views/Shared/_Fragment.cshtml", fragment)
+                }
+            }
+        </div>
+    </div>
+</div>
+
